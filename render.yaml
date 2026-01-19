@@ -1,0 +1,175 @@
+# Polis Render.com Blueprint
+# This configuration deploys a complete Polis instance with PT-PT translation support
+#
+# To deploy:
+# 1. Push this file to your repository
+# 2. Go to Render Dashboard → New + → Blueprint
+# 3. Select your repository and branch (edge)
+# 4. Click Apply
+#
+# After deployment, set these secrets in the Render dashboard:
+# - polis-server: JWT_PRIVATE_KEY, JWT_PUBLIC_KEY, ENCRYPTION_PASSWORD_00001, SESSION_SECRET
+
+databases:
+  - name: polis-postgres
+    databaseName: polis
+    plan: starter # Change to 'standard' or 'pro' for production
+    region: oregon # Change to your preferred region (oregon, frankfurt, singapore, ohio)
+    postgresMajorVersion: 15
+    ipAllowList: [] # Empty array allows all IPs
+
+services:
+  # ============================================
+  # Backend API Server
+  # ============================================
+  - type: web
+    name: polis-server
+    runtime: docker
+    dockerfilePath: ./server/Dockerfile
+    dockerContext: ./server
+    dockerCommand: npm start
+    plan: starter # Change to 'standard' or 'pro' for production
+    region: oregon
+    healthCheckPath: /api/v3/server_ping
+    envVars:
+      # Database
+      - key: DATABASE_URL
+        fromDatabase:
+          name: polis-postgres
+          property: connectionString
+      - key: DATABASE_SSL
+        value: true
+
+      # Node Environment
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+
+      # Security (set these in dashboard - don't commit secrets!)
+      - key: ENCRYPTION_PASSWORD_00001
+        sync: false # Set manually in Render dashboard
+      - key: SESSION_SECRET
+        sync: false # Generate with: openssl rand -hex 32
+      - key: JWT_PRIVATE_KEY
+        sync: false # Paste contents of jwt-private.pem
+      - key: JWT_PUBLIC_KEY
+        sync: false # Paste contents of jwt-public.pem
+
+      # XSRF Protection (enable in production)
+      - key: DISABLE_XSRF_PROTECTION
+        value: false
+
+      # Email (optional - configure for notifications)
+      # - key: SENDGRID_API_KEY
+      #   sync: false
+
+      # Translation API (optional - for auto-translating comments)
+      # - key: SHOULD_USE_TRANSLATION_API
+      #   value: true
+      # - key: GOOGLE_CREDENTIALS_BASE64
+      #   sync: false
+
+      # Service URLs (update after services are deployed)
+      # - key: MATH_URL
+      #   value: https://polis-math.onrender.com
+      # - key: STATIC_FILES_DOMAIN
+      #   value: https://polis-client-participation.onrender.com
+
+  # ============================================
+  # Math Service (Analytics Engine)
+  # ============================================
+  - type: web
+    name: polis-math
+    runtime: docker
+    dockerfilePath: ./math/Dockerfile
+    dockerContext: ./math
+    plan: starter
+    region: oregon
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: polis-postgres
+          property: connectionString
+      - key: MATH_ENV
+        value: prod
+      - key: LOGGING_LEVEL
+        value: warn
+      - key: WEBSERVER_USERNAME
+        generateValue: true
+      - key: WEBSERVER_PASS
+        generateValue: true
+      - key: DATABASE_POOL_SIZE
+        value: 10
+
+  # ============================================
+  # Client Participation (Main Frontend)
+  # Includes Portuguese (Portugal) translation!
+  # ============================================
+  - type: web
+    name: polis-client-participation
+    runtime: node
+    buildCommand: cd client-participation && npm ci && npm run build:prod
+    startCommand: cd client-participation && npx serve -s dist -p $PORT
+    plan: starter
+    region: oregon
+    envVars:
+      - key: NODE_ENV
+        value: production
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: SAMEORIGIN
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Cache-Control
+        value: public, max-age=3600
+
+  # ============================================
+  # Client Admin (Administration Dashboard)
+  # ============================================
+  - type: web
+    name: polis-client-admin
+    runtime: node
+    buildCommand: cd client-admin && npm ci && npm run build:prod
+    startCommand: cd client-admin && npx serve -s dist -p $PORT
+    plan: starter
+    region: oregon
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+  # ============================================
+  # Client Report (Reporting Interface)
+  # ============================================
+  - type: web
+    name: polis-client-report
+    runtime: node
+    buildCommand: cd client-report && npm ci && npm run build:prod
+    startCommand: cd client-report && npx serve -s dist -p $PORT
+    plan: starter
+    region: oregon
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+  # ============================================
+  # Delphi Service (AI/ML - Optional)
+  # Uncomment if you want AI-powered features
+  # ============================================
+  # - type: web
+  #   name: polis-delphi
+  #   runtime: docker
+  #   dockerfilePath: ./delphi/Dockerfile
+  #   dockerContext: ./delphi
+  #   plan: starter
+  #   region: oregon
+  #   envVars:
+  #     - key: DATABASE_URL
+  #       fromDatabase:
+  #         name: polis-postgres
+  #         property: connectionString
+  #     - key: ANTHROPIC_API_KEY
+  #       sync: false # Set in dashboard if using Claude AI
