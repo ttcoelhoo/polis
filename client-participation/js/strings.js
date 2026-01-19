@@ -40,8 +40,10 @@ var translations = {
   // Dutch
   nl: require("./strings/nl.js"),
   // Portuguese
-  // Brazilian Portuguese (all portuguese speakers are temporarily using the same file.)
+  // Brazilian Portuguese
   pt_br: require("./strings/pt_br.js"),
+  // Portuguese (Portugal)
+  pt_pt: require("./strings/pt_pt.js"),
   ps: require("./strings/ps.js"),
   // Portuguese (Timor-Leste)
   // pt_tl: require("./strings/pt_tl.js"),
@@ -110,11 +112,9 @@ preloadHelper.acceptLanguagePromise.then(function () {
       _.extend(strings, translations.nl);
     } else if (languageCode.match(/^sk/)) {
       _.extend(strings, translations.sk);
-    } else if (
-      languageCode.match(/^pt/) || // To help Portuguese participants until a specific translation is here
-      languageCode.match(/^pt-PT/) || // To help Portuguese participants until a specific translation is here
-      languageCode.match(/^pt-BR/)
-    ) {
+    } else if (languageCode.match(/^pt-PT/)) {
+      _.extend(strings, translations.pt_pt);
+    } else if (languageCode.match(/^pt-BR/) || languageCode.match(/^pt/)) {
       _.extend(strings, translations.pt_br);
     } else if (languageCode.match(/^he/)) {
       _.extend(strings, translations.he);

@@ -124,6 +124,10 @@ describe('Interface internationalization', function () {
     checkTranslation('pt', conversationId)
   })
 
+  it('translates into Portuguese (Portugal)', function () {
+    checkTranslation('pt-PT', conversationId)
+  })
+
   it('translates into Romanian', function () {
     checkTranslation('ro', conversationId)
   })
