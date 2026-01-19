@@ -648,6 +648,7 @@ export function readTranslation(lang, key = 'writePrompt') {
     ja: 'ja',
     nl: 'nl',
     pt: 'pt_br',
+    'pt-PT': 'pt_pt',
     ro: 'ro',
     ru: 'ru',
     sk: 'sk',
