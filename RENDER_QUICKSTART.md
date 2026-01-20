@@ -24,12 +24,19 @@ Your Portuguese (Portugal) translation is already merged into the `edge` branch 
    - Click **Apply**
 
 4. **Set secrets** (in Render dashboard after deployment):
-   - Generate JWT keys: `ssh-keygen -t rsa -b 4096 -m PEM -f jwt.key`
-   - Add to polis-server environment:
-     - `JWT_PRIVATE_KEY`: contents of `jwt.key`
-     - `JWT_PUBLIC_KEY`: contents of `jwt.key.pub`
-     - `ENCRYPTION_PASSWORD_00001`: random password
-     - `SESSION_SECRET`: `openssl rand -hex 32`
+   - Generate JWT keys:
+     ```bash
+     openssl genrsa -out jwt-private.pem 4096
+     openssl rsa -in jwt-private.pem -pubout -out jwt-public.pem
+     ```
+   - Generate session secret:
+     ```bash
+     openssl rand -hex 32
+     ```
+   - Add to polis-server environment in Render dashboard:
+     - `JWT_PRIVATE_KEY`: contents of `jwt-private.pem`
+     - `JWT_PUBLIC_KEY`: contents of `jwt-public.pem`
+     - `SESSION_SECRET`: output from `openssl rand -hex 32`
 
 5. **Run migrations**:
    - Open polis-server shell in Render
