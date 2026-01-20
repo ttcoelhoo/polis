@@ -13,8 +13,8 @@
 databases:
   - name: polis-postgres
     databaseName: polis
-    plan: starter # Change to 'standard' or 'pro' for production
-    region: oregon # Change to your preferred region (oregon, frankfurt, singapore, ohio)
+    plan: free # Free tier: 1GB storage, expires after 30 days. Change to 'standard' or 'pro' for production
+    region: frankfurt # Change to your preferred region (frankfurt, frankfurt, singapore, ohio)
     postgresMajorVersion: 15
     ipAllowList: [] # Empty array allows all IPs
 
@@ -29,7 +29,7 @@ services:
     dockerContext: ./server
     dockerCommand: npm start
     plan: starter # Change to 'standard' or 'pro' for production
-    region: oregon
+    region: frankfurt
     healthCheckPath: /api/v3/server_ping
     envVars:
       # Database
@@ -85,7 +85,7 @@ services:
     dockerfilePath: ./math/Dockerfile
     dockerContext: ./math
     plan: starter
-    region: oregon
+    region: frankfurt
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -111,7 +111,6 @@ services:
     name: polis-client-participation
     buildCommand: cd client-participation && npm ci && npm run build:prod
     staticPublishPath: client-participation/dist
-    plan: starter
     envVars:
       - key: NODE_ENV
         value: production
@@ -134,7 +133,6 @@ services:
     name: polis-client-admin
     buildCommand: cd client-admin && npm ci && npm run build:prod
     staticPublishPath: client-admin/dist
-    plan: starter
     envVars:
       - key: NODE_ENV
         value: production
@@ -147,7 +145,6 @@ services:
     name: polis-client-report
     buildCommand: cd client-report && npm ci && npm run build:prod
     staticPublishPath: client-report/dist
-    plan: starter
     envVars:
       - key: NODE_ENV
         value: production
@@ -162,7 +159,7 @@ services:
   #   dockerfilePath: ./delphi/Dockerfile
   #   dockerContext: ./delphi
   #   plan: starter
-  #   region: oregon
+  #   region: frankfurt
   #   envVars:
   #     - key: DATABASE_URL
   #       fromDatabase:
