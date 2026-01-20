@@ -44,7 +44,7 @@ The existing `render.yaml` file in your repository includes:
 
 ### Step 2: Generate Required Secrets
 
-Before deploying, generate the required JWT keys and session secret:
+Before deploying, generate the required environment variables:
 
 ```bash
 # Generate JWT key pair (RSA 4096-bit)
@@ -53,9 +53,18 @@ openssl rsa -in jwt-private.pem -pubout -out jwt-public.pem
 
 # Generate session secret
 openssl rand -hex 32
+
+# Optional: Generate auth secrets if using Facebook/Twitter
+# Facebook App Secret - obtained from Facebook Developer Console
+# Twitter Consumer Secret - obtained from Twitter Developer Portal
 ```
 
-Save these values - you'll need them in Step 4.
+Save these values securely - you'll need them in Step 5.
+
+**Important:**
+- `jwt-private.pem` and `jwt-public.pem` contain your JWT keys
+- The `openssl rand -hex 32` output is your SESSION_SECRET
+- Keep these values secure and never commit them to your repository
 
 ### Step 3: Push render.yaml to Your Repository
 
@@ -110,7 +119,8 @@ npm run migrations:up
 
 ### Service URLs
 
-After deployment, Render will provide URLs for each service:
+After deployment, Render will provide URLs for each service. **Note: The URLs below are examples only - your actual URLs will be different based on your service names.**
+
 - Server: `https://polis-server.onrender.com`
 - Math: `https://polis-math.onrender.com`
 - Client Participation: `https://polis-client-participation.onrender.com`
@@ -118,7 +128,7 @@ After deployment, Render will provide URLs for each service:
 
 ### Update Environment Variables with Service URLs
 
-Go back to **polis-server** and add:
+Go back to **polis-server** and add (replace with your actual service URLs):
 
 ```
 STATIC_FILES_DOMAIN=https://polis-client-participation.onrender.com
@@ -131,11 +141,11 @@ MATH_URL=https://polis-math.onrender.com
 
 ## 🌍 Testing Your PT-PT Translation
 
-After deployment, test your Portuguese (Portugal) translation:
+After deployment, test your Portuguese (Portugal) translation. **Note: Replace the example URLs below with your actual service URLs.**
 
 ### Method 1: URL Parameter
 ```
-https://polis-client-participation.onrender.com/[conversation-id]?ui_lang=pt-PT
+https://your-polis-client-participation.onrender.com/[conversation-id]?ui_lang=pt-PT
 ```
 
 ### Method 2: Browser Language
@@ -145,7 +155,7 @@ https://polis-client-participation.onrender.com/[conversation-id]?ui_lang=pt-PT
 
 ### Method 3: Verify Translation File
 ```bash
-curl https://polis-client-participation.onrender.com/js/strings/pt_pt.js
+curl https://your-polis-client-participation.onrender.com/js/strings/pt_pt.js
 ```
 
 You should see your European Portuguese translations!
@@ -239,28 +249,6 @@ View metrics in Render dashboard:
 
 ---
 
-## 💰 Cost Estimation
-
-### Starter Setup (Minimal)
-- **PostgreSQL Starter**: $7/month
-- **Server (Starter)**: $7/month
-- **Math (Starter)**: $7/month
-- **Static Sites**: FREE (3 included with paid services)
-- **Total**: ~$21/month
-
-### Production Setup (Recommended)
-- **PostgreSQL Standard**: $25/month
-- **Server (Standard)**: $25/month
-- **Math (Standard)**: $25/month
-- **Delphi (Standard)**: $25/month
-- **Total**: ~$100/month
-
-### Enterprise Setup
-- Professional plans with dedicated resources
-- Contact Render for custom pricing
-
----
-
 ## 🐛 Troubleshooting
 
 ### Build Failures
@@ -293,7 +281,7 @@ View metrics in Render dashboard:
 **Problem**: Services can't talk to each other
 **Solution**:
 - Use internal URLs: `https://polis-server` (without .onrender.com)
-- Or use full Render URLs: `https://polis-server.onrender.com`
+- Or use full Render URLs: `https://your-polis-server.onrender.com`
 - Check environment variables point to correct service URLs
 
 ---
@@ -304,7 +292,7 @@ Before going to production:
 
 - [ ] All secrets stored as environment variables (not in code)
 - [ ] JWT keys generated and configured
-- [ ] Database encryption password set
+- [ ] Session secret generated and set
 - [ ] SSL/TLS enabled (automatic with Render)
 - [ ] CORS configured for your domains
 - [ ] Auth providers configured (Facebook, Twitter, OIDC)
@@ -320,10 +308,12 @@ Your Polis deployment is now live on Render.com with full Portuguese (Portugal) 
 
 ### Quick Links
 
-- **Main site**: `https://polis-client-participation.onrender.com`
-- **Admin panel**: `https://polis-client-admin.onrender.com`
-- **API**: `https://polis-server.onrender.com`
-- **PT-PT Test**: `https://polis-client-participation.onrender.com/createuser?ui_lang=pt-PT`
+**Note: These are example URLs - use your actual service URLs from the Render dashboard.**
+
+- **Main site**: `https://your-polis-client-participation.onrender.com`
+- **Admin panel**: `https://your-polis-client-admin.onrender.com`
+- **API**: `https://your-polis-server.onrender.com`
+- **PT-PT Test**: `https://your-polis-client-participation.onrender.com/createuser?ui_lang=pt-PT`
 
 ### Next Steps
 
