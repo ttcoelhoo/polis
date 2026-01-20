@@ -112,7 +112,6 @@ services:
     buildCommand: cd client-participation && npm ci && npm run build:prod
     staticPublishPath: client-participation/dist
     plan: starter
-    region: oregon
     envVars:
       - key: NODE_ENV
         value: production
@@ -136,7 +135,6 @@ services:
     buildCommand: cd client-admin && npm ci && npm run build:prod
     staticPublishPath: client-admin/dist
     plan: starter
-    region: oregon
     envVars:
       - key: NODE_ENV
         value: production
@@ -150,7 +148,6 @@ services:
     buildCommand: cd client-report && npm ci && npm run build:prod
     staticPublishPath: client-report/dist
     plan: starter
-    region: oregon
     envVars:
       - key: NODE_ENV
         value: production
