@@ -8,7 +8,7 @@
 # 4. Click Apply
 #
 # After deployment, set these secrets in the Render dashboard:
-# - polis-server: JWT_PRIVATE_KEY, JWT_PUBLIC_KEY, ENCRYPTION_PASSWORD_00001, SESSION_SECRET
+# - polis-server: JWT_PRIVATE_KEY, JWT_PUBLIC_KEY, SESSION_SECRET
 
 databases:
   - name: polis-postgres
@@ -47,14 +47,12 @@ services:
         value: 5000
 
       # Security (set these in dashboard - don't commit secrets!)
-      - key: ENCRYPTION_PASSWORD_00001
-        sync: false # Set manually in Render dashboard
       - key: SESSION_SECRET
         sync: false # Generate with: openssl rand -hex 32
       - key: JWT_PRIVATE_KEY
-        sync: false # Paste contents of jwt-private.pem
+        sync: false # Generate with: openssl genrsa -out jwt-private.pem 4096 && openssl rsa -in jwt-private.pem -pubout -out jwt-public.pem
       - key: JWT_PUBLIC_KEY
-        sync: false # Paste contents of jwt-public.pem
+        sync: false # Paste contents of jwt-public.pem (public key from above command)
 
       # XSRF Protection (enable in production)
       - key: DISABLE_XSRF_PROTECTION
