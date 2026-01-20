@@ -106,11 +106,10 @@ services:
   # Client Participation (Main Frontend)
   # Includes Portuguese (Portugal) translation!
   # ============================================
-  - type: web
+  - type: static
     name: polis-client-participation
-    runtime: node
     buildCommand: cd client-participation && npm ci && npm run build:prod
-    startCommand: cd client-participation && npx serve -s dist -p $PORT
+    staticPublishPath: client-participation/dist
     plan: starter
     region: oregon
     envVars:
@@ -130,11 +129,10 @@ services:
   # ============================================
   # Client Admin (Administration Dashboard)
   # ============================================
-  - type: web
+  - type: static
     name: polis-client-admin
-    runtime: node
     buildCommand: cd client-admin && npm ci && npm run build:prod
-    startCommand: cd client-admin && npx serve -s dist -p $PORT
+    staticPublishPath: client-admin/dist
     plan: starter
     region: oregon
     envVars:
@@ -144,11 +142,10 @@ services:
   # ============================================
   # Client Report (Reporting Interface)
   # ============================================
-  - type: web
+  - type: static
     name: polis-client-report
-    runtime: node
     buildCommand: cd client-report && npm ci && npm run build:prod
-    startCommand: cd client-report && npx serve -s dist -p $PORT
+    staticPublishPath: client-report/dist
     plan: starter
     region: oregon
     envVars:
