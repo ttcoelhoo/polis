@@ -28,7 +28,7 @@ services:
     dockerfilePath: ./server/Dockerfile
     dockerContext: ./server
     dockerCommand: npm start
-    plan: starter # Change to 'standard' or 'pro' for production
+    plan: standard # Change to 'standard' or 'pro' for production
     region: frankfurt
     healthCheckPath: /api/v3/server_ping
     envVars:
