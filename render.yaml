@@ -30,7 +30,7 @@ services:
     dockerCommand: npm start
     plan: standard # Change to 'standard' or 'pro' for production
     region: frankfurt
-    healthCheckPath: /api/v3/server_ping
+    healthCheckPath: /api/v3/testConnection
     envVars:
       # Database
       - key: DATABASE_URL
