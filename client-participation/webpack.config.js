@@ -293,16 +293,17 @@ module.exports = (env, options) => {
           ]
         : []),
 
-      // Only compress files during production builds.
-      ...(isDevBuild || isDevServer
-        ? []
-        : [
-            new CompressionPlugin({
-              test: /\.(js|css)$/,
-              filename: "[path][base]",
-              deleteOriginalAssets: true
-            })
-          ])
+      // Disabled for Render deployment - Render handles compression automatically
+      // Keeping original assets ensures proper serving without Content-Encoding issues
+      // ...(isDevBuild || isDevServer
+      //   ? []
+      //   : [
+      //       new CompressionPlugin({
+      //         test: /\.(js|css)$/,
+      //         filename: "[path][base]",
+      //         deleteOriginalAssets: true
+      //       })
+      //     ])
     ],
 
     // Optimization settings

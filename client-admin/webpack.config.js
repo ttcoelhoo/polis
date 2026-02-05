@@ -89,7 +89,7 @@ export default (env, argv) => {
       // Common plugins for both production and development
       new HtmlWebPackPlugin({
         template: 'public/index.html',
-        filename: isProduction ? 'index_admin.html' : 'index.html',
+        filename: 'index.html',
         inject: 'body',
         isProduction: isProduction // Pass isProduction to the template
       }),
@@ -118,14 +118,15 @@ export default (env, argv) => {
           ]
         }),
 
-      isProduction &&
-        new CompressionPlugin({
-          test: /\.js$/,
-          exclude: /\.map$/,
-          filename: '[path][base]',
-          algorithm: 'gzip',
-          deleteOriginalAssets: 'keep-source-map'
-        }),
+      // Disabled for Render deployment - Render handles compression automatically
+      // isProduction &&
+      //   new CompressionPlugin({
+      //     test: /\.js$/,
+      //     exclude: /\.map$/,
+      //     filename: '[path][base]',
+      //     algorithm: 'gzip',
+      //     deleteOriginalAssets: 'keep-source-map'
+      //   }),
 
       isProduction &&
         new EventHooksPlugin({

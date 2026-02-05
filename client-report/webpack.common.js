@@ -35,7 +35,7 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       template: "public/index.html",
-      filename: "index_report.html",
+      filename: "index.html",
     }),
     new webpack.DefinePlugin({
       'process.env.AUTH_AUDIENCE': JSON.stringify(process.env.AUTH_AUDIENCE),
