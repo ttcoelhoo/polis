@@ -76,8 +76,9 @@ services:
 
   # ============================================
   # Math Service (Analytics Engine)
+  # Background worker - polls database and processes math
   # ============================================
-  - type: web
+  - type: worker
     name: polis-math
     runtime: docker
     dockerfilePath: ./math/Dockerfile
@@ -107,7 +108,7 @@ services:
   - type: web
     runtime: static
     name: polis-client-participation
-    buildCommand: cd client-participation && npm ci && npm run build:prod
+    buildCommand: cd client-participation && npm ci --include=dev && npm run build:prod
     staticPublishPath: client-participation/dist
     envVars:
       - key: NODE_ENV
@@ -129,7 +130,7 @@ services:
   - type: web
     runtime: static
     name: polis-client-admin
-    buildCommand: cd client-admin && npm ci && npm run build:prod
+    buildCommand: cd client-admin && npm ci --include=dev && npm run build:prod
     staticPublishPath: client-admin/dist
     envVars:
       - key: NODE_ENV
@@ -141,7 +142,7 @@ services:
   - type: web
     runtime: static
     name: polis-client-report
-    buildCommand: cd client-report && npm ci && npm run build:prod
+    buildCommand: cd client-report && npm ci --include=dev && npm run build:prod
     staticPublishPath: client-report/dist
     envVars:
       - key: NODE_ENV

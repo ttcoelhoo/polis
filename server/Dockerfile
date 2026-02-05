@@ -48,8 +48,8 @@ FROM base as prod
 # Set default NODE_ENV to production unless overridden at build time with --build-arg NODE_ENV=development
 ENV NODE_ENV ${NODE_ENV:-production}
 
-# Install OpenSSL and CA Certificates (CRITICAL for production)
-RUN apk add --no-cache openssl ca-certificates
+# Install OpenSSL, CA Certificates, and PostgreSQL client (for migrations)
+RUN apk add --no-cache openssl ca-certificates postgresql-client
 
 RUN npm config set fetch-retries 5 && \
     npm config set fetch-retry-mintimeout 20000 && \
