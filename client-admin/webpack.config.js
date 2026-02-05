@@ -39,7 +39,7 @@ export default (env, argv) => {
     mode: isProduction ? 'production' : 'development',
     entry: './src/index.js',
     output: {
-      path: path.join(__dirname, 'build'),
+      path: path.join(__dirname, 'dist'),
       filename: isProduction
         ? 'static/js/admin_bundle.[contenthash].js'
         : 'static/js/admin_bundle.js',
@@ -133,7 +133,7 @@ export default (env, argv) => {
             console.log('Writing *.headersJson files...')
 
             function writeHeadersJson(matchGlob, headersData = {}) {
-              const files = glob.sync(path.resolve(__dirname, 'build', matchGlob))
+              const files = glob.sync(path.resolve(__dirname, 'dist', matchGlob))
               files.forEach((f) => {
                 const headersFilePath = f + '.headersJson'
                 fs.writeFileSync(headersFilePath, JSON.stringify(headersData))
