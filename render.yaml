@@ -8,7 +8,15 @@
 # 4. Click Apply
 #
 # After deployment, set these secrets in the Render dashboard:
-# - polis-server: JWT_PRIVATE_KEY, JWT_PUBLIC_KEY, SESSION_SECRET
+# - polis-server: JWT_PRIVATE_KEY, JWT_PUBLIC_KEY, SESSION_SECRET, AUTH_CLIENT_SECRET
+#
+# Auth0 Setup:
+# 1. Create an API in Auth0: Applications → APIs → Create API
+#    - Name: "Polis API", Identifier: "https://polis-api"
+# 2. Configure your Auth0 Application's Allowed URLs:
+#    - Callback URLs: https://polis-client-admin.onrender.com, https://polis-client-report.onrender.com
+#    - Logout URLs: https://polis-client-admin.onrender.com, https://polis-client-report.onrender.com
+#    - Web Origins: https://polis-client-admin.onrender.com, https://polis-client-report.onrender.com
 
 databases:
   - name: polis-postgres
@@ -57,6 +65,18 @@ services:
       # XSRF Protection (enable in production)
       - key: DISABLE_XSRF_PROTECTION
         value: false
+
+      # Auth0 OIDC Configuration
+      - key: AUTH_ISSUER
+        value: https://dev-7xrslwnpd1m2ynn4.us.auth0.com/
+      - key: AUTH_CLIENT_ID
+        value: AeJmrXmL2riIRgQokgDrQx9cijnWqTnR
+      - key: AUTH_AUDIENCE
+        value: https://polis-api
+      - key: JWKS_URI
+        value: https://dev-7xrslwnpd1m2ynn4.us.auth0.com/.well-known/jwks.json
+      - key: AUTH_CLIENT_SECRET
+        sync: false
 
       # Email (optional - configure for notifications)
       # - key: SENDGRID_API_KEY
@@ -113,6 +133,12 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
+      - key: AUTH_ISSUER
+        value: https://dev-7xrslwnpd1m2ynn4.us.auth0.com/
+      - key: AUTH_CLIENT_ID
+        value: AeJmrXmL2riIRgQokgDrQx9cijnWqTnR
+      - key: AUTH_AUDIENCE
+        value: https://polis-api
     headers:
       - path: /*
         name: X-Frame-Options
@@ -135,6 +161,12 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
+      - key: AUTH_ISSUER
+        value: https://dev-7xrslwnpd1m2ynn4.us.auth0.com/
+      - key: AUTH_CLIENT_ID
+        value: AeJmrXmL2riIRgQokgDrQx9cijnWqTnR
+      - key: AUTH_AUDIENCE
+        value: https://polis-api
 
   # ============================================
   # Client Report (Reporting Interface)
@@ -147,6 +179,12 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
+      - key: AUTH_ISSUER
+        value: https://dev-7xrslwnpd1m2ynn4.us.auth0.com/
+      - key: AUTH_CLIENT_ID
+        value: AeJmrXmL2riIRgQokgDrQx9cijnWqTnR
+      - key: AUTH_AUDIENCE
+        value: https://polis-api
 
   # ============================================
   # Delphi Service (AI/ML - Optional)
